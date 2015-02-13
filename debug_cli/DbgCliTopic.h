@@ -11,7 +11,7 @@
 #include <DbgCliNode.h>
 
 /**
- * This is the Compositum part of the Composite Pattern.
+ * This is the Composite part of the Composite Pattern.
  */
 class DbgCli_Topic: public DbgCli_Node
 {
@@ -45,8 +45,14 @@ public:
   virtual void execute(unsigned int argc, char* args[], unsigned int idxToFirstArgToHandle);
 
 private:
+  void addChildNode(DbgCli_Node* node);
+  DbgCli_Node* getChildNode(const char* childNodeName);
+
+private:
   static DbgCli_Topic* s_rootNode;
 
+  DbgCli_Node* m_child;
+  DbgCli_Node* m_sibling;
 
 private: // forbidden default functions
   DbgCli_Topic& operator= (const DbgCli_Topic& src);  // assignment operator
