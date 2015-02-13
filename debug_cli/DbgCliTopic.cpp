@@ -19,6 +19,8 @@ DbgCli_Topic* DbgCli_Topic::RootNode()
 
 DbgCli_Topic::DbgCli_Topic(const char* parentPath, const char* nodeName, const char* helpText)
 : DbgCli_Node(parentPath, nodeName, helpText)
+, m_child(0)
+, m_sibling(0)
 { }
 
 DbgCli_Topic::~DbgCli_Topic()
@@ -27,6 +29,8 @@ DbgCli_Topic::~DbgCli_Topic()
 void DbgCli_Topic::addNode(DbgCli_Node* node)
 {
   // TODO: search the parent node according to the provided parentPath given by the node object.
+  const char* parentPath = node->getParentPath();
+
 }
 
 DbgCli_Node* DbgCli_Topic::getNode(const char* cmdPath, unsigned int cmdPathStrLen)
@@ -40,3 +44,14 @@ void DbgCli_Topic::execute(unsigned int arg_cnt, char* args[], unsigned int idxT
   // TODO: Finds its path according to the args array's tokens.
   // TODO: Calls the execute method of the right child node if found, increments the index to the first parameter to handle accordingly.
 }
+
+void DbgCli_Topic::addChildNode(DbgCli_Node* node)
+{
+  DbgCli_Topic* tmpTopic = m_child;
+  while (0 != tmpTopic)
+  {
+    tmpTopic = tmpTopic->m_sibling;
+  }
+  tmpTopic->addNode(node);
+}
+
