@@ -134,10 +134,18 @@ DbgCli_Node* DbgCli_Topic::getNode(const char* nodeName)
 void DbgCli_Topic::execute(unsigned int argc, const char** args, unsigned int idxToFirstArgToHandle)
 {
   const char* nodeName = args[idxToFirstArgToHandle];
+#ifdef ARDUINO
+  Serial.print("DbgCli_Topic::execute, curNodeName: ");
+  Serial.print(this->getNodeName());
+  Serial.print(", nodeName: ");
+  Serial.println(nodeName);
+#endif
+
   DbgCli_Node* tmpNode = getNode(nodeName);
   if (0 != tmpNode)
   {
-    tmpNode->execute(argc, args, ++idxToFirstArgToHandle);
+    idxToFirstArgToHandle++;
+    tmpNode->execute(argc, args, idxToFirstArgToHandle);
   }
   else
   {
