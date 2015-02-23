@@ -151,9 +151,25 @@ void DbgCli_Topic::execute(unsigned int argc, const char** args, unsigned int id
   {
     // not found
 #ifdef ARDUINO
-    Serial.println(getHelpText());
+    if ('\0' == nodeName)
+    {
+      Serial.println(getHelpText());
+    }
+    else
+    {
+      Serial.print("Node or cmd \"");
+      Serial.print(nodeName);
+      Serial.println("\" not found!");
+    }
 #else
-    printf("%s\n", getHelpText());
+    if ('\0' == nodeName)
+    {
+      printf("%s\n", getHelpText());
+    }
+    else
+    {
+      printf("Node or cmd \"%s\" not found!\n", nodeName);
+    }
 #endif
   }
 }
