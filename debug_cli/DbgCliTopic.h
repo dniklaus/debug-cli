@@ -25,26 +25,29 @@ public:
   virtual ~DbgCli_Topic();
 
   /**
-   * Add a node to the tree.
-   * Location is given by the parentPath set for the node.
-   * @param node Pointer to the node to be added.
+   * print all child nodes to console output
    */
-  virtual void addNode(DbgCli_Node* node);
+  virtual void printAllChildNodes();
 
-private:
+public:
   /**
    * Add a new node to the tree.
    * @param node Pointer to the DbgCli_Node to be added.
    */
   virtual void addChildNode(DbgCli_Node* node);
 
-public:
   /**
    * Get the child node by name (no grandchildren).
    * @param nodeName Child node object name.
    * @return DbgCli_Node Pointer to the object found, null pointer otherwise.
    */
-  virtual DbgCli_Node* getNode(const char* nodeName);
+  virtual DbgCli_Node* getChildNode(const char* nodeName);
+
+  /**
+   * Get child node.
+   * @return DbgCli_Node Pointer to the firstchild object, null pointer if none is available.
+   */
+  virtual DbgCli_Node* getFirstChild();
 
   /**
    * Execute the debug command.

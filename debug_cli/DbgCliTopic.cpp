@@ -23,81 +23,6 @@ DbgCli_Topic::DbgCli_Topic(const char* parentPath, const char* nodeName, const c
 DbgCli_Topic::~DbgCli_Topic()
 { }
 
-void DbgCli_Topic::addNode(DbgCli_Node* node)
-{
-  if (0 != node)
-  {
-    const char* nodeParentPath = node->getParentPath();
-    unsigned int strLen = 50;
-    char str[strLen];
-    strncpy(str, nodeParentPath, strLen);
-
-    unsigned int nbrOfTokens = 0;
-    char nodeParentPathTokens[10][50];
-
-    char* token;
-    token = strtok(str, " /.-");
-    while (0 != token)
-    {
-      strncpy(nodeParentPathTokens[nbrOfTokens], token, 50);
-      nbrOfTokens++;
-      token = strtok(0, " /.-");
-    }
-
-    // find name of this in parent path of node to add
-    bool found = false;
-    const char* thisNodeName  = this->getNodeName();
-    unsigned int tokenIterator = 0;  // range: 0..nbrOfTokens-1
-    while ((tokenIterator < nbrOfTokens) && !found)
-    {
-      char* nodePathToken = nodeParentPathTokens[tokenIterator];
-      found = (strcmp(nodePathToken, thisNodeName) == 0);
-      tokenIterator++;
-    }
-
-    if (found)
-    {
-      if ((tokenIterator) == nbrOfTokens)
-      {
-        // node shall be a child of this
-        this->addChildNode(node);
-      }
-      else
-      {
-        char* childNodeName = nodeParentPathTokens[tokenIterator];
-        // node shall be a grand-child (or deeper) of this
-        // find continued path in own family
-        DbgCli_Node* childNode = this->getNode(childNodeName);
-        if (0 != childNode)
-        {
-          childNode->addNode(node);
-        }
-        else
-        {
-          // not yet existing intermediate node, create it
-          unsigned int strLen = 50;
-          const char* thisParentPath = this->getParentPath();
-          char parentPathForChild[strLen];
-          strncpy(parentPathForChild, thisParentPath, strLen);
-          if (strlen(thisParentPath) > 0)
-          {
-            strcat(parentPathForChild, " ");
-          }
-          strcat(parentPathForChild, thisNodeName);
-
-          DbgCli_Node* childNode = new DbgCli_Topic(parentPathForChild, childNodeName, "");
-          this->addChildNode(childNode);
-          childNode->addNode(node);
-        }
-      }
-    }
-    else
-    {
-
-    }
-  }
-}
-
 void DbgCli_Topic::addChildNode(DbgCli_Node* node)
 {
   if (0 == m_firstChild)
@@ -116,9 +41,49 @@ void DbgCli_Topic::addChildNode(DbgCli_Node* node)
   }
 }
 
-DbgCli_Node* DbgCli_Topic::getNode(const char* nodeName)
+void DbgCli_Topic::printAllChildNodes()
+{
+#ifdef ARDUINO
+  Serial.print("Node ");
+  Serial.print(tmpNode->getNodeName());
+  Serial.print(": ");
+  Serial.print(tmpNode->getHelpText());
+  Serial.println("\n");
+  tmpNode = tmpNode->getFirstChild();
+  if (0 != tmpNode)
+  {
+    Serial.print("Contains: ");
+    Serial.print(tmpNode->getNodeName());
+    tmpNode = tmpNode->getNextSibling();
+    while (0 != tmpNode)
+    {
+      Serial.print(", ");
+      Serial.print(tmpNode->getNodeName());
+      tmpNode = tmpNode->getNextSibling();
+    }
+    Serial.println(" ");
+  }
+#else
+  printf("Node %s: %s\n", this->getNodeName(), this->getHelpText());
+  DbgCli_Node* tmpNode = this->getFirstChild();
+  if (0 != tmpNode)
+  {
+    printf("Contains: %s", tmpNode->getNodeName());
+    tmpNode = tmpNode->getNextSibling();
+    while (0 != tmpNode)
+    {
+      printf(", %s", tmpNode->getNodeName());
+      tmpNode = tmpNode->getNextSibling();
+    }
+    printf("\n");
+  }
+#endif
+}
+
+DbgCli_Node* DbgCli_Topic::getChildNode(const char* nodeName)
 {
   bool found = false;
+
   DbgCli_Node* tmpNode = m_firstChild;
   while ((0 != tmpNode) && !found)
   {
@@ -131,6 +96,11 @@ DbgCli_Node* DbgCli_Topic::getNode(const char* nodeName)
   return tmpNode;
 }
 
+DbgCli_Node* DbgCli_Topic::getFirstChild()
+{
+  return m_firstChild;
+}
+
 void DbgCli_Topic::execute(unsigned int argc, const char** args, unsigned int idxToFirstArgToHandle)
 {
   const char* nodeName = args[idxToFirstArgToHandle];
@@ -139,37 +109,40 @@ void DbgCli_Topic::execute(unsigned int argc, const char** args, unsigned int id
   Serial.print(this->getNodeName());
   Serial.print(", nodeName: ");
   Serial.println(nodeName);
+#else
+  printf("DbgCli_Topic::execute, curNodeName: %s", this->getNodeName());
+  printf(", nodeName: %s\n",nodeName);
 #endif
 
-  DbgCli_Node* tmpNode = getNode(nodeName);
+  DbgCli_Node* tmpNode = this->getChildNode(nodeName); //get child or sibling with this nodeName
   if (0 != tmpNode)
   {
     idxToFirstArgToHandle++;
-    tmpNode->execute(argc, args, idxToFirstArgToHandle);
+    if (idxToFirstArgToHandle < argc)
+    {
+      // execute next node, if necessary
+      tmpNode->execute(argc, args, idxToFirstArgToHandle);
+    }
+    else
+    {
+      // reached last node
+      tmpNode->printAllChildNodes();
+    }
+  }
+  else if (0==strcmp(DbgCli_Topic::RootNode()->getNodeName(),nodeName))
+  {
+    // root node was executed
+    this->printAllChildNodes();
   }
   else
   {
-    // not found
+    // at least one node not found
 #ifdef ARDUINO
-    if ('\0' == nodeName)
-    {
-      Serial.println(getHelpText());
-    }
-    else
-    {
-      Serial.print("Node or cmd \"");
-      Serial.print(nodeName);
-      Serial.println("\" not found!");
-    }
+    Serial.print("Node or cmd \"");
+    Serial.print(nodeName);
+    Serial.println("\" not found!");
 #else
-    if ('\0' == nodeName)
-    {
-      printf("%s\n", getHelpText());
-    }
-    else
-    {
-      printf("Node or cmd \"%s\" not found!\n", nodeName);
-    }
+    printf("Node or cmd \"%s\" not found!\n", nodeName);
 #endif
   }
 }

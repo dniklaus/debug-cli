@@ -21,11 +21,9 @@ public:
 
 public:
   /**
-   * Add a node to the tree.
-   * Location is given by the parentPath set for the node.
-   * @param node Pointer to the node to be added.
+   * print all child nodes to console output
    */
-  virtual void addNode(DbgCli_Node* node) { }
+  virtual void printAllChildNodes() { }
 
 protected:
   /**
@@ -41,7 +39,13 @@ public:
    * @param nodeName Child node object name.
    * @return DbgCli_Node Pointer to the object found, null pointer otherwise.
    */
-  virtual DbgCli_Node* getNode(const char* nodeName) { return 0; }
+  virtual DbgCli_Node* getChildNode(const char* nodeName) { return 0; }
+
+  /**
+   * Get first child node.
+   * @return DbgCli_Node Pointer to the firstchild object, null pointer if none is available.
+   */
+  virtual DbgCli_Node* getFirstChild() {return 0;}
 
 public:
   /**
@@ -72,6 +76,13 @@ public:
 public:
   static void AssignRootNode(DbgCli_Node* rootNode);
   static DbgCli_Node* RootNode();
+  /**
+    * Get a pointer to a node
+    * @param parentPath parentPath of the searched node
+    * @param nodeName (optional) nodeName of the searched node
+    * @return DbgCli_Node Pointer to searched node, to parent node if nodeName is empty or null if (parent)node not found.
+    */
+  static DbgCli_Node* getNode(const char* parentPath, const char* nodeName = "\0");
 
 private:
   static DbgCli_Node* s_rootNode;
