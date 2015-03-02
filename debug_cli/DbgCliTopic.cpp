@@ -45,11 +45,11 @@ void DbgCli_Topic::printAllChildNodes()
 {
 #ifdef ARDUINO
   Serial.print("Node ");
-  Serial.print(tmpNode->getNodeName());
+  Serial.print(this->getNodeName());
   Serial.print(": ");
-  Serial.print(tmpNode->getHelpText());
+  Serial.print(this->getHelpText());
   Serial.println("\n");
-  tmpNode = tmpNode->getFirstChild();
+  DbgCli_Node* tmpNode = this->getFirstChild();
   if (0 != tmpNode)
   {
     Serial.print("Contains: ");
