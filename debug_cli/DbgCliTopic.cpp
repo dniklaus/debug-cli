@@ -47,8 +47,7 @@ void DbgCli_Topic::printAllChildNodes()
   Serial.print("Node ");
   Serial.print(this->getNodeName());
   Serial.print(": ");
-  Serial.print(this->getHelpText());
-  Serial.println("\n");
+  Serial.println(this->getHelpText());
   DbgCli_Node* tmpNode = this->getFirstChild();
   if (0 != tmpNode)
   {
@@ -103,46 +102,44 @@ DbgCli_Node* DbgCli_Topic::getFirstChild()
 
 void DbgCli_Topic::execute(unsigned int argc, const char** args, unsigned int idxToFirstArgToHandle)
 {
-  const char* nodeName = args[idxToFirstArgToHandle];
-#ifdef ARDUINO
-  Serial.print("DbgCli_Topic::execute, curNodeName: ");
-  Serial.print(this->getNodeName());
-  Serial.print(", nodeName: ");
-  Serial.println(nodeName);
-#else
-  printf("DbgCli_Topic::execute, curNodeName: %s", this->getNodeName());
-  printf(", nodeName: %s\n",nodeName);
-#endif
-
-  DbgCli_Node* tmpNode = this->getChildNode(nodeName); //get child or sibling with this nodeName
-  if (0 != tmpNode)
+  if (idxToFirstArgToHandle < argc)
   {
-    idxToFirstArgToHandle++;
-    if (idxToFirstArgToHandle < argc)
+    const char* nodeName = args[idxToFirstArgToHandle];
+  #ifdef ARDUINO
+    Serial.print("DbgCli_Topic::execute, curNodeName: ");
+    Serial.print(this->getNodeName());
+    Serial.print(", nodeName: ");
+    Serial.println(nodeName);
+  #else
+    printf("DbgCli_Topic::execute, curNodeName: %s", this->getNodeName());
+    printf(", nodeName: %s\n",nodeName);
+  #endif
+
+    DbgCli_Node* tmpNode = this->getChildNode(nodeName); //get child or sibling with this nodeName
+    if (0 != tmpNode)
     {
-      // execute next node, if necessary
+      idxToFirstArgToHandle++;
       tmpNode->execute(argc, args, idxToFirstArgToHandle);
+    }
+    else if (0==strcmp(DbgCli_Topic::RootNode()->getNodeName(),nodeName))
+    {
+      // root node was executed
+      this->printAllChildNodes();
     }
     else
     {
-      // reached last node
-      tmpNode->printAllChildNodes();
+      // at least one node not found
+  #ifdef ARDUINO
+      Serial.print("Node or cmd \"");
+      Serial.print(nodeName);
+      Serial.println("\" not found!");
+  #else
+      printf("Node or cmd \"%s\" not found!\n", nodeName);
+  #endif
     }
   }
-  else if (0==strcmp(DbgCli_Topic::RootNode()->getNodeName(),nodeName))
-  {
-    // root node was executed
-    this->printAllChildNodes();
-  }
   else
-  {
-    // at least one node not found
-#ifdef ARDUINO
-    Serial.print("Node or cmd \"");
-    Serial.print(nodeName);
-    Serial.println("\" not found!");
-#else
-    printf("Node or cmd \"%s\" not found!\n", nodeName);
-#endif
+  { // at last node and its a topic
+    this->printAllChildNodes();
   }
 }
