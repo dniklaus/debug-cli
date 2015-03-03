@@ -17,15 +17,17 @@ class DbgCli_Topic: public DbgCli_Node
 {
 public:
   /**
-   *
-   * @param parentPath
+   * ctor of a topic node
+   * @param parentPath path of the parent node
+   * @param nodeName name of the node
+   * @param helpText help text for this node
    */
   DbgCli_Topic(const char* parentPath, const char* nodeName, const char* helpText);
 
   virtual ~DbgCli_Topic();
 
   /**
-   * print all child nodes to console output
+   * print all child nodes of the topic to console output
    */
   virtual void printAllChildNodes();
 
@@ -52,8 +54,8 @@ public:
   /**
    * Execute the debug command.
    * Finds its path according to the args array's tokens. Calls the execute method of the right child node if found, increments the index to the first parameter to handle accordingly.
-   * @param argc
-   * @param args
+   * @param argc number of elements in args
+   * @param args all arguments stored in an array
    * @param idxToFirstArgToHandle Index to the first argument in args array to be handled as parameter (this is the first parameter to be passed to the method that gets called by this command)
    */
   virtual void execute(unsigned int argc, const char** args, unsigned int idxToFirstArgToHandle);

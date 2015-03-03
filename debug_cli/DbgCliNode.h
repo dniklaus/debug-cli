@@ -13,7 +13,7 @@
  */
 class DbgCli_Node
 {
-protected: // abstract class - constructor must not be accessible
+protected: /// abstract class - constructor must not be accessible
   DbgCli_Node(const char* parentPath, const char* nodeName, const char* helpText);
 
 public:
@@ -51,8 +51,8 @@ public:
   /**
    * Execute the debug command.
    * Pure virtual method, to be implemented for leaf nodes (i.e. commands) by the application.
-   * @param argc
-   * @param args
+   * @param argc number of elements in args
+   * @param args all arguments stored in an array
    * @param idxToFirstArgToHandle Index to the first argument in args array to be handled as parameter (this is the first parameter to be passed to the method that gets called by this command)
    */
   virtual void execute(unsigned int argc, const char** args, unsigned int idxToFirstArgToHandle) = 0;
