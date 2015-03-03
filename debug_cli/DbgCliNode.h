@@ -57,7 +57,6 @@ public:
    */
   virtual void execute(unsigned int argc, const char** args, unsigned int idxToFirstArgToHandle) = 0;
 
-  const char* getParentPath();
   const char* getNodeName();
   const char* getHelpText();
 
@@ -88,7 +87,6 @@ private:
   static DbgCli_Node* s_rootNode;
 
 private:
-  const char* m_parentPath;
   const char* m_nodeName;
   const char* m_helpText;
 
