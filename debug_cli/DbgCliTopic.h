@@ -18,7 +18,7 @@ class DbgCli_Topic: public DbgCli_Node
 public:
   /**
    * ctor of a topic node
-   * @param parentNode pointer to the parent node, to add the newly created topic
+   * @param parentNode pointer to the parent node, to add the newly created topic. For creating the root node pass 0 (nullptr).
    * @param nodeName name of the node
    * @param helpText help text for this node
    */
