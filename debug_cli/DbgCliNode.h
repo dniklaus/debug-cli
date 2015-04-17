@@ -8,13 +8,14 @@
 #ifndef PLAT_DEBUG_CLI_DBGCLINODE_H_
 #define PLAT_DEBUG_CLI_DBGCLINODE_H_
 
+
 /**
  * Composite Pattern: Abstract Node Class, acts as the Interface to the object tree.
  */
 class DbgCli_Node
 {
 protected: /// abstract class - constructor must not be accessible
-  DbgCli_Node(const char* parentPath, const char* nodeName, const char* helpText);
+  DbgCli_Node(DbgCli_Node* parentNode, const char* nodeName, const char* helpText);
 
 public:
   virtual ~DbgCli_Node();

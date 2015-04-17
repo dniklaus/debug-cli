@@ -5,7 +5,7 @@
  *      Author: niklausd
  */
 
-#include <DbgCliTopic.h>
+#include "DbgCliTopic.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -15,8 +15,8 @@
 #include <stdio.h>
 #endif
 
-DbgCli_Topic::DbgCli_Topic(const char* parentPath, const char* nodeName, const char* helpText)
-: DbgCli_Node(parentPath, nodeName, helpText)
+DbgCli_Topic::DbgCli_Topic(DbgCli_Node* parentNode, const char* nodeName, const char* helpText)
+: DbgCli_Node(parentNode, nodeName, helpText)
 , m_firstChild(0)
 { }
 

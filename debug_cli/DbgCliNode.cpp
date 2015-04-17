@@ -5,8 +5,8 @@
  *      Author: niklausd
  */
 
-#include <DbgCliTopic.h>
-#include <DbgCliNode.h>
+#include "DbgCliTopic.h"
+#include "DbgCliNode.h"
 #include <string.h>
 
 #define MAX_TREE_HEIGHT        7
@@ -80,18 +80,18 @@ DbgCli_Node* DbgCli_Node::getNode(const char* parentPath, const char* nodeName)
   }
 }
 
-DbgCli_Node::DbgCli_Node(const char* parentPath, const char* nodeName, const char* helpText)
+DbgCli_Node::DbgCli_Node(DbgCli_Node* parentNode, const char* nodeName, const char* helpText)
 : m_nodeName(nodeName)
 , m_helpText(helpText)
 , m_sibling(0)
 {
   DbgCli_Node* rootNode = DbgCli_Node::RootNode();
-  if (0 != rootNode) // not possible to ad nodes, without root node
+  if (0 != rootNode) // not possible to add nodes, without root node
   {
-    DbgCli_Topic* parentNode = (DbgCli_Topic*)DbgCli_Node::getNode(parentPath);
-    if (0 != parentNode)
+    DbgCli_Topic* parentTopic = static_cast<DbgCli_Topic*>(parentNode);
+    if (0 != parentTopic)
     {
-      parentNode->addChildNode(this);
+      parentTopic->addChildNode(this);
     }
   }
 }

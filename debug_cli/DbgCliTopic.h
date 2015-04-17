@@ -8,7 +8,7 @@
 #ifndef PLAT_DEBUG_CLI_DBGCLITOPIC_H_
 #define PLAT_DEBUG_CLI_DBGCLITOPIC_H_
 
-#include <DbgCliNode.h>
+#include "DbgCliNode.h"
 
 /**
  * This is the Composite part of the Composite Pattern.
@@ -18,11 +18,11 @@ class DbgCli_Topic: public DbgCli_Node
 public:
   /**
    * ctor of a topic node
-   * @param parentPath path of the parent node
+   * @param parentNode pointer to the parent node, to add the newly created topic
    * @param nodeName name of the node
    * @param helpText help text for this node
    */
-  DbgCli_Topic(const char* parentPath, const char* nodeName, const char* helpText);
+  DbgCli_Topic(DbgCli_Node* parentNode, const char* nodeName, const char* helpText);
 
   virtual ~DbgCli_Topic();
 
