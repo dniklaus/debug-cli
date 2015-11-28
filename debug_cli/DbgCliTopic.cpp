@@ -105,15 +105,15 @@ void DbgCli_Topic::execute(unsigned int argc, const char** args, unsigned int id
   if (idxToFirstArgToHandle < argc)
   {
     const char* nodeName = args[idxToFirstArgToHandle];
-  #ifdef ARDUINO
-    Serial.print("DbgCli_Topic::execute, curNodeName: ");
-    Serial.print(this->getNodeName());
-    Serial.print(", nodeName: ");
-    Serial.println(nodeName);
-  #else
-    printf("DbgCli_Topic::execute, curNodeName: %s", this->getNodeName());
-    printf(", nodeName: %s\n",nodeName);
-  #endif
+//  #ifdef ARDUINO
+//    Serial.print("DbgCli_Topic::execute, curNodeName: ");
+//    Serial.print(this->getNodeName());
+//    Serial.print(", nodeName: ");
+//    Serial.println(nodeName);
+//  #else
+//    printf("DbgCli_Topic::execute, curNodeName: %s", this->getNodeName());
+//    printf(", nodeName: %s\n",nodeName);
+//  #endif
 
     DbgCli_Node* tmpNode = this->getChildNode(nodeName); //get child or sibling with this nodeName
     if (0 != tmpNode)
