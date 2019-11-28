@@ -35,6 +35,12 @@ protected:
 
 public:
   /**
+   * Get parent node.
+   * @return DbgCli_Node Pointer to the parent node object.
+   */
+  virtual DbgCli_Node* getParentNode() { return m_parentNode; }
+
+  /**
    * Get a child node by name (no grandchildren).
    * Command nodes return always null, since these objects don't have any children.
    * @param nodeName Child node object name.
@@ -86,6 +92,7 @@ public:
 
 private:
   static DbgCli_Node* s_rootNode;
+  DbgCli_Node* m_parentNode;
 
 private:
   const char* m_nodeName;
