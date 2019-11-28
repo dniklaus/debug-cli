@@ -81,16 +81,17 @@ DbgCli_Node* DbgCli_Node::getNode(const char* parentPath, const char* nodeName)
 }
 
 DbgCli_Node::DbgCli_Node(DbgCli_Node* parentNode, const char* nodeName, const char* helpText)
-: m_nodeName(nodeName)
+: m_parentNode(parentNode)
+, m_nodeName(nodeName)
 , m_helpText(helpText)
 , m_sibling(0)
 {
   DbgCli_Node* rootNode = DbgCli_Node::RootNode();
   if (0 != rootNode) // not possible to add nodes, without root node
   {
-    DbgCli_Topic* parentTopic = static_cast<DbgCli_Topic*>(parentNode);
-    if (0 != parentTopic)
+    if (0 != m_parentNode)
     {
+      DbgCli_Topic* parentTopic = static_cast<DbgCli_Topic*>(m_parentNode);
       parentTopic->addChildNode(this);
     }
   }
