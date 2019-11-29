@@ -33,10 +33,16 @@ public:
 
 public:
   /**
-   * Add a new node to the tree.
+   * Add a new node as a child.
    * @param node Pointer to the DbgCli_Node to be added.
    */
   virtual void addChildNode(DbgCli_Node* node);
+
+  /**
+   * Remove a particular node from the children.
+   * @param node Pointer to the DbgCli_Node to be removed.
+   */
+  virtual void removeChildNode(DbgCli_Node* node);
 
   /**
    * Get the child node by name (no grandchildren).

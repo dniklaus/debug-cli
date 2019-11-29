@@ -33,6 +33,12 @@ protected:
    */
   virtual void addChildNode(DbgCli_Node* childNode) { }
 
+  /**
+   * Remove a particular node from the children.
+   * @param node Pointer to the DbgCli_Node to be removed.
+   */
+  virtual void removeChildNode(DbgCli_Node* childNode) { }
+
 public:
   /**
    * Get parent node.

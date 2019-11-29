@@ -21,7 +21,16 @@ DbgCli_Topic::DbgCli_Topic(DbgCli_Node* parentNode, const char* nodeName, const 
 { }
 
 DbgCli_Topic::~DbgCli_Topic()
-{ }
+{ 
+  DbgCli_Node* next = m_firstChild;
+  while (0 != next)
+  {
+    DbgCli_Node* toBeDeleted = next;
+    delete next;
+
+    next = next->getNextSibling();
+  }
+}
 
 void DbgCli_Topic::addChildNode(DbgCli_Node* node)
 {
@@ -38,6 +47,26 @@ void DbgCli_Topic::addChildNode(DbgCli_Node* node)
       next = next->getNextSibling();
     }
     next->setNextSibling(node);
+  }
+}
+
+void DbgCli_Topic::removeChildNode(DbgCli_Node* node)
+{
+  if (m_firstChild == node)
+  {
+    m_firstChild = node->getNextSibling();
+  }
+  else
+  {
+    DbgCli_Node* next = m_firstChild;
+    while ((next != 0) && (next->getNextSibling() != node))
+    {
+      next = next->getNextSibling();
+    }
+    if (next != 0)
+    {
+      next->setNextSibling(node->getNextSibling());
+    }
   }
 }
 
