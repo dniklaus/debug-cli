@@ -98,7 +98,13 @@ DbgCli_Node::DbgCli_Node(DbgCli_Node* parentNode, const char* nodeName, const ch
 }
 
 DbgCli_Node::~DbgCli_Node()
-{ }
+{
+  if (0 != m_parentNode)
+  {
+    DbgCli_Topic* parentTopic = static_cast<DbgCli_Topic*>(m_parentNode);
+    parentTopic->removeChildNode(this);
+  }
+}
 
 const char* DbgCli_Node::getNodeName()
 {
