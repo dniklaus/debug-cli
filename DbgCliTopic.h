@@ -8,7 +8,7 @@
 #ifndef PLAT_DEBUG_CLI_DBGCLITOPIC_H_
 #define PLAT_DEBUG_CLI_DBGCLITOPIC_H_
 
-#include <DbgCliNode.h>
+#include "DbgCliNode.h"
 
 /**
  * This is the Composite part of the Composite Pattern.
@@ -17,40 +17,51 @@ class DbgCli_Topic: public DbgCli_Node
 {
 public:
   /**
-   *
-   * @param parentPath
+   * ctor of a topic node
+   * @param parentNode pointer to the parent node, to add the newly created topic. For creating the root node pass 0 (nullptr).
+   * @param nodeName name of the node
+   * @param helpText help text for this node
    */
-  DbgCli_Topic(const char* parentPath, const char* nodeName, const char* helpText);
+  DbgCli_Topic(DbgCli_Node* parentNode, const char* nodeName, const char* helpText);
 
   virtual ~DbgCli_Topic();
 
   /**
-   * Add a node to the tree.
-   * Location is given by the parentPath set for the node.
-   * @param node Pointer to the node to be added.
+   * print all child nodes of the topic to console output
    */
-  virtual void addNode(DbgCli_Node* node);
+  virtual void printAllChildNodes();
 
-private:
+public:
   /**
-   * Add a new node to the tree.
+   * Add a new node as a child.
    * @param node Pointer to the DbgCli_Node to be added.
    */
   virtual void addChildNode(DbgCli_Node* node);
 
-public:
+  /**
+   * Remove a particular node from the children.
+   * @param node Pointer to the DbgCli_Node to be removed.
+   */
+  virtual void removeChildNode(DbgCli_Node* node);
+
   /**
    * Get the child node by name (no grandchildren).
    * @param nodeName Child node object name.
    * @return DbgCli_Node Pointer to the object found, null pointer otherwise.
    */
-  virtual DbgCli_Node* getNode(const char* nodeName);
+  virtual DbgCli_Node* getChildNode(const char* nodeName);
+
+  /**
+   * Get child node.
+   * @return DbgCli_Node Pointer to the firstchild object, null pointer if none is available.
+   */
+  virtual DbgCli_Node* getFirstChild();
 
   /**
    * Execute the debug command.
    * Finds its path according to the args array's tokens. Calls the execute method of the right child node if found, increments the index to the first parameter to handle accordingly.
-   * @param argc
-   * @param args
+   * @param argc number of elements in args
+   * @param args all arguments stored in an array
    * @param idxToFirstArgToHandle Index to the first argument in args array to be handled as parameter (this is the first parameter to be passed to the method that gets called by this command)
    */
   virtual void execute(unsigned int argc, const char** args, unsigned int idxToFirstArgToHandle);
