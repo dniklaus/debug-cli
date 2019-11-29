@@ -26,9 +26,9 @@ DbgCli_Topic::~DbgCli_Topic()
   while (0 != next)
   {
     DbgCli_Node* toBeDeleted = next;
-    delete next;
-
     next = next->getNextSibling();
+    delete toBeDeleted;
+    toBeDeleted = 0;
   }
 }
 
