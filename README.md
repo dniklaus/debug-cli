@@ -1,2 +1,14 @@
 # debug-cli
 Debug CLI for Embedded Applications - modular and object oriented command tree structure.
+
+The DebugCLI component supports the developer in module integration, debugging and test automation.
+
+Product Overview
+
+| Product Name | DbgCLI |
+| ------------ | ----------- |
+| Target user  | Embedded Application Developer (C++)       |
+| Description and Benefit of this library | The Debug Command Line Interface (CLI) enables to perform module integration tests, and can be used to run specific methods and functions of components within an embedded application. The commands are organized in a tree structure. Benefit for the developer: The CLI commands are represented as classes that can be attached to any component of an embedded application. Components can be debugged, tested and integrated easily using commands sent on a console through the CLI on the running application. The commands can be sent by scripts and thus support test automation as well. Benefit for the project: Solution projects benefit from pre-built components forming a re-usable framework, leading to shorter time to market. |
+| Context | Given an application having two components, comp_a and comp_b. In comp_a we have two classes, service1 with method11() and service2 with method21() and method22(). We want be able to run those three methods using the Debug CLI. Therefore we create the three Command classes DbgCli_CmdM11, DbgCli_CmdM21, DbgCli_CmdM22. The resulting command tree shall then look as follows: [img] If we want to run method service2::method21(), we then type ``dbg cmpa srv2 m21`` into the terminal. |
+| Basic Requirements | Any component being part of an embedded application shall be able to define a debug command node within a command tree structure. Every node of this command tree structure can be accessed through the command line interface (i.e. a serial console port using a terminal emulation application running on a PC). Any node but leaf nodes can have 0..n children. A leaf node represents a command end point having a dedicated test method to be executed for debug, test and module integration purposes. |
+| Additional Information | A leaf node is named a command node. Class Name: Command / Responsibilities: knows its own function to be called on execution, knows how function parameters have to be handled, provides a help text to inform the CLI user about the command's purpose / Collaborations: function to be called.   A node that can hold any kind of child nodes is named a topic node. Class Name: Topic / Responsibilities: has 0..n children, can access all the direct child nodes, provides a help text to inform the CLI user about the topic's purpose, can list all the direct child nodes to inform the CLI user about the options on the current location, supports to add new child nodes, on execute (depending on path depth given): show children / help, dive deeper into tree structure / Collaborations: child nodes, topics, commands |
